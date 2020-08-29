@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input class="form-control" id="displayPIN" type="text">
+                    <button class="generate-btn operations" id="PinGenerate-btn" onclick="generatePIN();">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input class="form-control" id="output-value" type="text">
+                    <div class="numbers">
+                        <div class="calc-body" id="allButton">
+                            <div class="calc-button-row">
+                              <div class="button number" id="btn-7">7</div>
+                              <div class="button number" id="btn-8">8</div>
+                              <div class="button number" id="btn-9">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button number" id="btn-4">4</div>
+                              <div class="button number" id="btn-5">5</div>
+                              <div class="button number" id="btn-6">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button number" id="btn-1" >1</div>
+                              <div class="button number" id="btn-2" >2</div>
+                              <div class="button number" id="btn-3">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button operations" id="btn-del"><</div>
+                                <div class="button number" id="btn-0">0</div>
+                                <div class="button operations" id="btn-cler">C</div>
+                            </div>
+                            <div>
+                                <button type="submit " class="submit-btn operations" id="submit-btn">Submit</button>
+                                <p class="action-left" id="click-remaining">3 try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p class="notify" id="not-matched">❌ Pin Didn't Match, Please try again</p>
+            <p class="notify" id="matched">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+    <script>
+
+
+        //to generate PIN
+        let generatedPin;
+        function generatePIN(){
+            let i;
+            for(i = 100000; i<1000000; i++){    
+            }
+            const getPinValue = Math.random(200)*i;
+            generatedPin = parseInt(getPinValue);
+            document.getElementById("displayPIN").value = generatedPin;
+            return generatedPin;         
+        }
+
+
+    function getOutput(){
+        return document.getElementById("output-value").value;
+    }
+
+
+    function printOutput(num){
+        document.getElementById("output-value").value=num;
+    }
+
+
+    //adding key value to keypad display
+    let number = document.getElementsByClassName("number");
+    for(let i =0;i<number.length;i++){
+        number[i].addEventListener('click',function(){
+            let output=getOutput();
+            if(output!=NaN){
+                output=output+document.getElementById(this.id).innerText;
+                printOutput(output);
+            }
+        });
+    }
+
+
+    let operator = document.getElementsByClassName("operations");
+    for(let i =0;i<operator.length;i++){
+        operator[i].addEventListener('click',function(){
+            if(this.id=="btn-cler"){
+                printOutput("");
+            }
+            else if(this.id=="btn-del"){
+                let output=getOutput().toString();
+                    output= output.substr(0,output.length-1);
+                    printOutput(output);		
+            }
+            else if(this.id=="PinGenerate-btn"){
+                generatePIN();
+            }
+            else if (this.id=="submit-btn"){
+                checkPin();
+            }
+        });
+    }
+
+
+    let counterValue = 3;
+    function checkPin(){
+        const currentPin = generatedPin;
+        const myPin =parseInt(getOutput());
+
+        if(currentPin == myPin){
+            document.getElementById("matched").style.display = "block";
+            document.getElementById("not-matched").style.display = "none";
+            
+            counterValue = 3;
+            document.getElementById("click-remaining").innerText = counterValue+" try left";
+        }
+        else{
+            counterValue--;
+            document.getElementById("not-matched").style.display = "block";
+            document.getElementById("matched").style.display = "none"; 
+            document.getElementById("click-remaining").innerText = counterValue+" try left";
+            if(counterValue<1){
+                document.getElementById("submit-btn").disabled=true;
+                document.getElementById("click-remaining").innerText = "You can't click. Your chance is overe !!!";
+            }
+        }
+        printOutput("");
+    }
+
+
+    </script>
+</body>
+</html>
